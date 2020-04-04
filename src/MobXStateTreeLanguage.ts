@@ -101,10 +101,6 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
         })
     }
 
-    protected namedTypeToNameForTopLevel(type: Type): Type | undefined {
-        return super.namedTypeToNameForTopLevel(type)
-    }
-
     protected emitClassBlockBody(c: ClassType): void {
         this.emitPropertyTable(c, (name, _jsonName, p) => {
             const t = p.type
@@ -113,28 +109,6 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
                 [this.sourceFor(t).source, p.isOptional ? ')' : '', ',']
             ]
         })
-    }
-
-    protected emitPropertyTable(
-        c: ClassType,
-        makePropertyRow: (name: Name, jsonName: string, p: ClassProperty) => Sourcelike[]
-    ): void {
-        let table: Sourcelike[][] = []
-        const emitTable = () => {
-            if (table.length === 0) return
-            this.emitTable(table)
-            table = []
-        }
-
-        this.forEachClassProperty(c, 'none', (name, jsonName, p) => {
-            const description = this.descriptionForClassProperty(c, jsonName)
-            if (description !== undefined) {
-                emitTable()
-                this.emitDescription(description)
-            }
-            table.push(makePropertyRow(name, jsonName, p))
-        })
-        emitTable()
     }
 
     protected sourceFor(t: Type): MultiWord {
