@@ -8,7 +8,6 @@ import {
     Name,
     Type,
     modifySource,
-    ClassProperty,
     Sourcelike,
     matchType,
     TargetLanguage,
@@ -21,15 +20,13 @@ import {utf16StringEscape} from 'quicktype/dist/quicktype-core/support/Strings'
 import {isES3IdentifierStart} from 'quicktype/dist/quicktype-core/language/JavaScriptUnicodeMaps'
 import {legalizeName} from 'quicktype/dist/quicktype-core/language/JavaScript'
 import {MultiWord, singleWord, parenIfNeeded} from 'quicktype/dist/quicktype-core/Source'
-import {OptionValues, BooleanOption} from 'quicktype/dist/quicktype-core/RendererOptions'
+import {OptionValues, StringOption} from 'quicktype/dist/quicktype-core/RendererOptions'
 import {TypeKind} from 'quicktype/dist/quicktype-core/Type'
-import {ConvertersOptions} from 'quicktype/dist/quicktype-core/support/Converters'
 
-export const mstOptions =  {
-    runtimeConverterTypes: new BooleanOption("runtime-type-converters", "Normalize string data such 'Date' to valid MST snapshot format at runtime", true),
+export const mstOptions = {
+    typesModule: new StringOption('types-module', 'MST types module', 'MODULE_NAME', 'mobx-state-tree'),
     nicePropertyNames: tsFlowOptions.nicePropertyNames,
-    acronymStyle: tsFlowOptions.acronymStyle,
-    converters: tsFlowOptions.converters
+    acronymStyle: tsFlowOptions.acronymStyle
 } as const
 
 export class MobXStateTreeTargetLanguage extends TypeScriptTargetLanguage {
@@ -45,15 +42,16 @@ export class MobXStateTreeTargetLanguage extends TypeScriptTargetLanguage {
         renderContext: RenderContext,
         untypedOptionValues: {[name: string]: any}
     ): MobXStateTreeRenderer {
-        untypedOptionValues = Object.assign({}, untypedOptionValues, {
-            // [tsFlowOptions.justTypes.definition.name]: String(true),
-            [tsFlowOptions.declareUnions.definition.name]: String(false), // set to false, MST has builtin support fot union types
-            [tsFlowOptions.runtimeTypecheck.definition.name]: String(false) // set to false, MST has builtin support for type checking
-        })
-
-        const typedOptions = {
-            ...getOptionValues(mstOptions, untypedOptionValues)
+        const predefinedOptionValues = {
+            [tsFlowOptions.justTypes.definition.name]: String(true), // MST covers most of encoder features out of the box
+            [tsFlowOptions.declareUnions.definition.name]: String(false), // MST has builtin support for union types
+            [tsFlowOptions.runtimeTypecheck.definition.name]: String(false) // MST has builtin support for type checking
         }
+
+        const allUntypedOptionValues = Object.assign({}, untypedOptionValues, predefinedOptionValues)
+        const allOptions = {...tsFlowOptions, ...mstOptions}
+
+        const typedOptions = getOptionValues(allOptions, allUntypedOptionValues)
 
         return new MobXStateTreeRenderer(this, renderContext, typedOptions)
     }
@@ -83,12 +81,8 @@ function quotePropertyName(original: string): string {
 export class MobXStateTreeRenderer extends TypeScriptRenderer {
     private readonly _mstOptions: OptionValues<typeof mstOptions>
 
-    constructor(
-        targetLanguage: TargetLanguage,
-        renderContext: RenderContext,
-        options: OptionValues<typeof mstOptions>
-    ) {
-        const {runtimeConverterTypes, ...optionsRest} = options as OptionValues<(typeof mstOptions & typeof tsFlowOptions)>
+    constructor(targetLanguage: TargetLanguage, renderContext: RenderContext, options: OptionValues<typeof mstOptions>) {
+        const {typesModule, ...optionsRest} = options as OptionValues<typeof mstOptions & typeof tsFlowOptions>
 
         super(targetLanguage, renderContext, optionsRest)
 
@@ -146,7 +140,7 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
                 ])
             },
             unionType => {
-                if (true/*!this._mstOptions.declareUnions*/ || nullableFromUnion(unionType) !== null) {
+                if (true /*!this._mstOptions.declareUnions*/ || nullableFromUnion(unionType) !== null) {
                     const uniqueChildren = Array.from(unionType.getChildren()).filter(function (
                         filteringChild,
                         index,
@@ -183,7 +177,7 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
                     return singleWord('types.Date')
                 }
 
-                return singleWord('string')
+                return singleWord('types.string')
             }
         )
     }
@@ -215,7 +209,10 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
     }
 
     protected emitSourceStructure() {
-        this.emitLine("import {types} from 'mobx-state-tree'")
+        const {typesModule} = this._mstOptions
+
+        this.emitLine(`/* tslint:disable */`)
+        this.emitLine(`import {types} from '${typesModule}'`)
         this.ensureBlankLine()
         super.emitSourceStructure()
     }
@@ -226,39 +223,5 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
 
     protected canBeForwardDeclared(t: Type): boolean {
         return (['enum', 'object'] as TypeKind[]).indexOf(t.kind) !== -1
-    }
-
-    protected emitConvertModuleBody(): void {
-        const converter = (t: Type, name: Name) => {
-            // const typeMap = this.typeMapTypeFor(t)
-
-            this.emitBlock([this.deserializerFunctionLine(t, name), ' '], '', () => {
-                if (true/*!this._mstOptions.runtimeTypecheck*/) {
-                    this.emitLine('return JSON.parse(json);')
-                } else {
-                    // this.emitLine('return cast(JSON.parse(json), ', typeMap, ');')
-                }
-            })
-
-            this.ensureBlankLine()
-
-            this.emitBlock([this.serializerFunctionLine(t, name), ' '], '', () => {
-                if (true/*!this._mstOptions.runtimeTypecheck*/) {
-                    this.emitLine('return JSON.stringify(value);')
-                } else {
-                    // this.emitLine('return JSON.stringify(uncast(value, ', typeMap, '), null, 2);')
-                }
-            })
-        }
-
-        switch (this._mstOptions.converters) {
-            case ConvertersOptions.AllObjects:
-                this.forEachObject('interposing', converter)
-                break
-
-            default:
-                this.forEachTopLevel('interposing', converter)
-                break
-        }
     }
 }
