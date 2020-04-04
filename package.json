@@ -47,7 +47,8 @@
         "prepack": "rm -rf lib && npm run build",
         "test": "jest",
         "build": "tsc -b",
-        "try": "ts-node ./src/index.ts -s schema --src test/fixtures/product.schema.json -o test/__snapshots__/product.ts --types-module src/types.ts"
+        "try": "ts-node ./src/index.ts -s schema --src test/fixtures/product.schema.json -o test/__snapshots__/product.ts --types-module src/types.ts",
+        "help": "ts-node ./src/index.ts --help"
     },
     "types": "lib/index.d.ts"
 }

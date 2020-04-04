@@ -6,6 +6,7 @@ import {quicktype as quicktypeLib, quicktypeMultiFile} from 'quicktype/dist/quic
 import {CLIOptions, parseCLIOptions, makeQuicktypeOptions, writeOutput} from 'quicktype'
 import {MobXStateTreeTargetLanguage, mstOptions} from './MobXStateTreeLanguage'
 import {Options} from 'quicktype/dist/quicktype-core/Run'
+import captureStdOut from './stdout-capture'
 
 export async function quicktype(options: Partial<Options>) {
     const optionsMerged = Object.assign({}, options, {
@@ -39,8 +40,7 @@ export function resolveTypesModuleOption(options: Partial<Options>, outPath?: st
             const moduleLstat = statSync(path)
 
             return moduleLstat.isFile() || moduleLstat.isDirectory()
-        }
-        catch (e) {
+        } catch (e) {
             return false
         }
     })
@@ -71,7 +71,8 @@ export function resolveTypesModuleOption(options: Partial<Options>, outPath?: st
         ...options,
         rendererOptions: {
             ...rendererOptions,
-            [mstOptions.typesModule.definition.name]: (moduleImportPath[0] === '.') ? moduleImportPath : `./${moduleImportPath}`
+            [mstOptions.typesModule.definition.name]:
+                moduleImportPath[0] === '.' ? moduleImportPath : `./${moduleImportPath}`
         }
     }
 }
@@ -102,14 +103,21 @@ export async function main(args: string[] | Partial<CLIOptions>) {
         }
     }
 
-    const quicktypeOptions = await (async function () {
+    const [quicktypeOptions, stdOut] = await captureStdOut(async function () {
         const typedOptions = await makeQuicktypeOptions(cliOptions, [targetLanguage])
         if (!typedOptions) {
             return undefined
         }
 
         return resolveTypesModuleOption(typedOptions, cliOptions.out)
-    }())
+    })
+
+    if (stdOut) {
+        const packageJson = require(pathResolve('package.json')) as {bin: object}
+        const [[binName]] = Object.entries(packageJson.bin) // retrieves first binary property value from package.json file
+
+        console.log(stdOut.replace(/\bquicktype\b/g, binName)) // replaces all all references to quicktype in help output with quicktypemst name
+    }
 
     if (quicktypeOptions === undefined) {
         return

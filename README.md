@@ -16,6 +16,7 @@ Based on [`quicktype`](https://quicktype.io/). To use `quicktypemst` effectively
 # Usage
 ```bash
 $ quicktypemst [--out FILE] FILE|URL ...
+$ quicktypemst --help
 ```
 
 # Examples
