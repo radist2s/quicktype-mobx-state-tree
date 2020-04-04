@@ -28,7 +28,7 @@ type DateType = Date | null
 export function typeDate() {
     return mstTypes.custom<DateSnapshotType, DateType>({
         name: 'Date',
-        fromSnapshot(snapshot: DateSnapshotType): Date | null {
+        fromSnapshot(snapshot: DateSnapshotType): DateType {
             const timestampMs = normalizeTimestampMs(snapshot)
 
             return timestampMs === null ? null : new Date(timestampMs)
@@ -43,7 +43,7 @@ export function typeDate() {
         isTargetType(value: DateSnapshotType | DateType): boolean {
             return value instanceof Date || value === null
         },
-        toSnapshot(value: DateType): string | null {
+        toSnapshot(value: DateType): Exclude<DateSnapshotType, number> {
             return value ? value.toISOString() : null
         }
     })
