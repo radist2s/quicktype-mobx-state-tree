@@ -1,0 +1,6 @@
+*-debug.log
+*-error.log
+/.nyc_output
+/lib
+node_modules
+/.idea/

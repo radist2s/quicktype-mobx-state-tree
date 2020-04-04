@@ -1,0 +1,440 @@
+{
+    "$id": "product.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer",
+            "description": "Unique identifier for the resource."
+        },
+        "name": {
+            "type": "string",
+            "description": "Product name."
+        },
+        "slug": {
+            "type": "string",
+            "description": "Product slug."
+        },
+        "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the product was created, in the site's timezone."
+        },
+        "date_created_gmt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the product was created, as GMT."
+        },
+        "type": {
+            "type": "string",
+            "description": "Product type.",
+            "enum": ["simple", "grouped", "external", "variable"],
+            "default": "simple"
+        },
+        "status": {
+            "type": "string",
+            "description": "Product status (post status).",
+            "enum": [
+                "publish",
+                "future",
+                "draft",
+                "pending",
+                "private",
+                "trash",
+                "auto-draft",
+                "inherit",
+                "request-pending",
+                "request-confirmed",
+                "request-failed",
+                "request-completed",
+                "in-progress",
+                "failed",
+                "wc-pending",
+                "wc-processing",
+                "wc-on-hold",
+                "wc-completed",
+                "wc-cancelled",
+                "wc-refunded",
+                "wc-failed",
+                "vacation",
+                "wcm-active",
+                "wcm-delayed",
+                "wcm-complimentary",
+                "wcm-pending",
+                "wcm-paused",
+                "wcm-expired",
+                "wcm-cancelled",
+                "any"
+            ],
+            "default": "draft"
+        },
+        "featured": {
+            "type": "boolean",
+            "description": "Featured product."
+        },
+        "catalog_visibility": {
+            "type": "string",
+            "description": "Catalog visibility.",
+            "enum": ["visible", "catalog", "search", "hidden"],
+            "default": "visible"
+        },
+        "description": {
+            "type": "string",
+            "description": "Product description."
+        },
+        "short_description": {
+            "type": "string",
+            "description": "Product short description."
+        },
+        "sku": {
+            "type": "string",
+            "description": "Unique identifier."
+        },
+        "regular_price": {
+            "type": "string",
+            "description": "Product regular price."
+        },
+        "sale_price": {
+            "type": "string",
+            "description": "Product sale price."
+        },
+        "date_on_sale_from": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start date of sale price, in the site's timezone."
+        },
+        "date_on_sale_from_gmt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start date of sale price, as GMT."
+        },
+        "date_on_sale_to": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End date of sale price, in the site's timezone."
+        },
+        "date_on_sale_to_gmt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End date of sale price, in the site's timezone."
+        },
+        "virtual": {
+            "type": "boolean",
+            "description": "If the product is virtual."
+        },
+        "downloadable": {
+            "type": "boolean",
+            "description": "If the product is downloadable."
+        },
+        "downloads": {
+            "type": "array",
+            "description": "List of downloadable files.",
+            "items": {
+                "$ref": "#/definitions/downloads"
+            }
+        },
+        "download_limit": {
+            "type": "integer",
+            "description": "Number of times downloadable files can be downloaded after purchase."
+        },
+        "download_expiry": {
+            "type": "integer",
+            "description": "Number of days until access to downloadable files expires."
+        },
+        "external_url": {
+            "type": "string",
+            "description": "Product external URL. Only for external products."
+        },
+        "button_text": {
+            "type": "string",
+            "description": "Product external button text. Only for external products."
+        },
+        "tax_status": {
+            "type": "string",
+            "description": "Tax status.",
+            "enum": ["taxable", "shipping", "none"],
+            "default": "taxable"
+        },
+        "tax_class": {
+            "type": "string",
+            "description": "Tax class."
+        },
+        "manage_stock": {
+            "type": "boolean",
+            "description": "Stock management at product level."
+        },
+        "stock_quantity": {
+            "type": ["integer", "null"],
+            "description": "Stock quantity."
+        },
+        "stock_status": {
+            "type": "string",
+            "description": "Controls the stock status of the product.",
+            "enum": ["instock", "outofstock", "onbackorder"],
+            "default": "instock"
+        },
+        "backorders": {
+            "type": "string",
+            "description": "If managing stock, this controls if backorders are allowed.",
+            "enum": ["no", "notify", "yes"],
+            "default": "no"
+        },
+        "sold_individually": {
+            "type": "boolean",
+            "description": "Allow one item to be bought in a single order."
+        },
+        "weight": {
+            "type": "string",
+            "description": "Product weight (kg)."
+        },
+        "dimensions": {
+            "type": "object",
+            "description": "Product dimensions."
+        },
+        "shipping_class": {
+            "type": "string",
+            "description": "Shipping class slug."
+        },
+        "reviews_allowed": {
+            "type": "boolean",
+            "description": "Allow reviews."
+        },
+        "upsell_ids": {
+            "type": "array",
+            "description": "List of up-sell products IDs.",
+            "items": {
+                "type": "integer"
+            }
+        },
+        "cross_sell_ids": {
+            "type": "array",
+            "description": "List of cross-sell products IDs.",
+            "items": {
+                "type": "integer"
+            }
+        },
+        "parent_id": {
+            "type": "integer",
+            "description": "Product parent ID."
+        },
+        "purchase_note": {
+            "type": "string",
+            "description": "Optional note to send the customer after purchase."
+        },
+        "categories": {
+            "type": "array",
+            "description": "List of categories.",
+            "items": {
+                "$ref": "#/definitions/categories"
+            }
+        },
+        "tags": {
+            "type": "array",
+            "description": "List of tags.",
+            "items": {
+                "$ref": "#/definitions/tags"
+            }
+        },
+        "images": {
+            "type": "array",
+            "description": "List of images.",
+            "items": {
+                "$ref": "#/definitions/images"
+            }
+        },
+        "attributes": {
+            "type": "array",
+            "description": "List of attributes.",
+            "items": {
+                "$ref": "#/definitions/attributes"
+            }
+        },
+        "default_attributes": {
+            "type": "array",
+            "description": "Defaults variation attributes.",
+            "items": {
+                "$ref": "#/definitions/default_attributes"
+            }
+        },
+        "menu_order": {
+            "type": "integer",
+            "description": "Menu order, used to custom sort products."
+        },
+        "meta_data": {
+            "type": "array",
+            "description": "Meta data.",
+            "items": {
+                "$ref": "#/definitions/meta_data"
+            }
+        }
+    },
+    "definitions": {
+        "downloads": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "File ID."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "File name."
+                },
+                "file": {
+                    "type": "string",
+                    "description": "File URL."
+                }
+            }
+        },
+        "categories": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Category ID."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Category name.",
+                    "readOnly": true
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "Category slug.",
+                    "readOnly": true
+                }
+            }
+        },
+        "tags": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Tag ID."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Tag name.",
+                    "readOnly": true
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "Tag slug.",
+                    "readOnly": true
+                }
+            }
+        },
+        "images": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Image ID."
+                },
+                "date_created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The date the image was created, in the site's timezone.",
+                    "readOnly": true
+                },
+                "date_created_gmt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The date the image was created, as GMT.",
+                    "readOnly": true
+                },
+                "date_modified": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The date the image was last modified, in the site's timezone.",
+                    "readOnly": true
+                },
+                "date_modified_gmt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The date the image was last modified, as GMT.",
+                    "readOnly": true
+                },
+                "src": {
+                    "type": "string",
+                    "description": "Image URL."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Image name."
+                },
+                "alt": {
+                    "type": "string",
+                    "description": "Image alternative text."
+                }
+            }
+        },
+        "attributes": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Attribute ID."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Attribute name."
+                },
+                "position": {
+                    "type": "integer",
+                    "description": "Attribute position."
+                },
+                "visible": {
+                    "type": "boolean",
+                    "description": "Define if the attribute is visible on the \"Additional information\" tab in the product's page."
+                },
+                "variation": {
+                    "type": "boolean",
+                    "description": "Define if the attribute can be used as variation."
+                },
+                "options": {
+                    "type": "array",
+                    "description": "List of available term names of the attribute.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "default_attributes": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Attribute ID."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Attribute name."
+                },
+                "option": {
+                    "type": "string",
+                    "description": "Selected attribute term name."
+                }
+            }
+        },
+        "meta_data": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Meta ID.",
+                    "readOnly": true
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Meta key."
+                },
+                "value": {
+                    "type": ["array", "boolean", "integer", "null", "number", "object", "string"],
+                    "description": "Meta value."
+                }
+            }
+        }
+    }
+}

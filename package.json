@@ -1,0 +1,53 @@
+{
+    "name": "quicktype-mobx-state-tree",
+    "description": "Quicktype MobX State Tree renderer",
+    "version": "1.0.0-alpha.0",
+    "author": "Alex Batalov @radist2s",
+    "bin": {
+        "quicktypemst": "./lib/index"
+    },
+    "bugs": "https://github.com/radist2s/quicktype-mobx-state-tree/issues",
+    "dependencies": {
+        "quicktype": "^15.0.223"
+    },
+    "devDependencies": {
+        "@types/jest": "^25.1.5",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^10.17.18",
+        "chai": "^4.2.0",
+        "jest": "^25.2.6",
+        "mobx": "^5.15.4",
+        "mobx-state-tree": "^3.15.0",
+        "mocha": "^5.2.0",
+        "ts-jest": "^25.3.0",
+        "ts-node": "^8.8.1",
+        "tslib": "^1.11.1",
+        "typescript": "^3.8.3"
+    },
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "files": [
+        "/lib"
+    ],
+    "homepage": "https://github.com/radist2s/quicktype-mobx-state-tree",
+    "keywords": [
+        "mobx",
+        "mst",
+        "types",
+        "mobx-state-tree",
+        "quicktype",
+        "codegen",
+        "generator"
+    ],
+    "license": "MIT",
+    "main": "lib/index.js",
+    "repository": "radist2s/quicktype-mobx-state-tree",
+    "scripts": {
+        "prepack": "rm -rf lib && npm run build",
+        "test": "jest",
+        "build": "tsc -b",
+        "try": "ts-node ./src/index.ts -s schema --src test/fixtures/product.schema.json -o src/product.ts"
+    },
+    "types": "lib/index.d.ts"
+}
