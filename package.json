@@ -4,7 +4,7 @@
     "version": "1.0.0-alpha.0",
     "author": "Alex Batalov @radist2s",
     "bin": {
-        "quicktypemst": "./lib/index"
+        "quicktypemst": "./lib/index.js"
     },
     "bugs": "https://github.com/radist2s/quicktype-mobx-state-tree/issues",
     "dependencies": {

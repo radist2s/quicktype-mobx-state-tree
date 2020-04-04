@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import {relative as pathRelative, resolve as pathResolve, dirname as pathDirname, extname as pathExtname} from 'path'
 import {statSync, lstatSync} from 'fs'
 import {quicktype as quicktypeLib, quicktypeMultiFile} from 'quicktype/dist/quicktype-core'
