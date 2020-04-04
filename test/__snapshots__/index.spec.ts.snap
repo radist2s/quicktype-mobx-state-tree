@@ -2,6 +2,7 @@
 
 exports[`transform should import custom types module 1`] = `
 "/* tslint:disable */
+/* eslint-disable */
 import {types} from '../src/types'
 
 export enum Enum {
@@ -154,6 +155,7 @@ Object {
 
 exports[`transform should transform 1`] = `
 "/* tslint:disable */
+/* eslint-disable */
 import {types} from 'mobx-state-tree'
 
 export const Attributes = types.model('Attributes', {
