@@ -212,6 +212,7 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
         const {typesModule} = this._mstOptions
 
         this.emitLine(`/* tslint:disable */`)
+        this.emitLine(`/* eslint-disable */`)
         this.emitLine(`import {types} from '${typesModule}'`)
         this.ensureBlankLine()
         super.emitSourceStructure()
