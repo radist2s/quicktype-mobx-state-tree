@@ -13,7 +13,20 @@ Quicktype to Mobx State Tree bindings
 
 Based on [`quicktype`](https://quicktype.io/). To use `quicktypemst` effectively, it is better to read original [quicktype documentation](https://github.com/quicktype/quicktype) first.
 
-# Usage
+# Installation
+
+### Install globally
+```bash
+$ npm install -g @radist2s/quicktype-mobx-state-tree
+```
+
+
+### Install locally
+```bash
+$ npm install @radist2s/quicktype-mobx-state-tree --save-dev
+```
+
+# CLI Usage
 ```bash
 $ quicktypemst [--out FILE] FILE|URL ...
 $ quicktypemst --help
@@ -134,4 +147,18 @@ export const types = {
         return typeDate()
     }
 }
+```
+
+### Project `npm` automation
+`package.json`
+```json
+{
+    "scripts": {
+        "gen-models": "quicktypemst -s schema --src src/rest.schema.json -o build/gen/rest.ts --types-module src/custom-types.ts"
+    }
+}
+```
+##### Usage
+```bash
+$ npm run gen-models
 ```
