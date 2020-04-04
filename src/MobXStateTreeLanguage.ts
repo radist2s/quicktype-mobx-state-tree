@@ -220,18 +220,6 @@ export class MobXStateTreeRenderer extends TypeScriptRenderer {
         super.emitSourceStructure()
     }
 
-    protected emitTypes(): void {
-        this.forEachNamedType(
-            'leading-and-interposing',
-            (c: ClassType, n: Name) => {
-                this.emitDescription(this.descriptionForType(c))
-                this.emitClassBlock(c, n)
-            },
-            (e, n) => this.emitEnum(e, n),
-            (u, n) => this.emitUnion(u, n)
-        )
-    }
-
     protected get needsTypeDeclarationBeforeUse() {
         return true
     }
