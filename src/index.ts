@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {relative as pathRelative, resolve as pathResolve, dirname as pathDirname, extname as pathExtname} from 'path'
+import {relative as pathRelative, resolve as pathResolve, dirname as pathDirname, extname as pathExtname, join as pathJoin} from 'path'
 import {statSync, lstatSync} from 'fs'
 import {quicktype as quicktypeLib, quicktypeMultiFile} from 'quicktype/dist/quicktype-core'
 import {CLIOptions, parseCLIOptions, makeQuicktypeOptions, writeOutput} from 'quicktype'
@@ -113,7 +113,7 @@ export async function main(args: string[] | Partial<CLIOptions>) {
     })
 
     if (stdOut) {
-        const packageJson = require(pathResolve('package.json')) as {bin: object}
+        const packageJson = require(pathJoin(__dirname, '../package.json')) as {bin: object}
         const [[binName]] = Object.entries(packageJson.bin) // retrieves first binary property value from package.json file
 
         console.log(stdOut.replace(/\bquicktype\b/g, binName)) // replaces all all references to quicktype in help output with quicktypemst name
