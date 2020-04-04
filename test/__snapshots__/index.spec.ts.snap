@@ -1,7 +1,160 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`transform should import custom types module 1`] = `
+"/* tslint:disable */
+import {types} from '../src/types'
+
+export enum Enum {
+    First = \\"first\\",
+    Second = \\"second\\",
+    Third = \\"third\\",
+}
+
+export const Schema = types.model('Schema', {
+    date: types.maybe(  types.Date),
+    enum: types.maybe(  types.enumeration<Enum>('Enum', Object.values(Enum))),
+    number: types.maybe(types.number),
+    string: types.maybe(types.string),
+})
+"
+`;
+
+exports[`transform should load json snapshot 1`] = `
+Object {
+  "attributes": Array [
+    Object {
+      "id": 6,
+      "name": "Color",
+      "options": Array [
+        "Black",
+        "Green",
+      ],
+      "position": 0,
+      "variation": true,
+      "visible": false,
+    },
+    Object {
+      "id": 0,
+      "name": "Size",
+      "options": Array [
+        "S",
+        "M",
+      ],
+      "position": 0,
+      "variation": true,
+      "visible": true,
+    },
+  ],
+  "backorders": "no",
+  "button_text": "",
+  "catalog_visibility": "visible",
+  "categories": Array [
+    Object {
+      "id": 9,
+      "name": "Clothing",
+      "slug": "clothing",
+    },
+    Object {
+      "id": 14,
+      "name": "T-shirts",
+      "slug": "t-shirts",
+    },
+  ],
+  "cross_sell_ids": Array [],
+  "date_created": "2017-03-23T12:03:12.000Z",
+  "date_created_gmt": "2017-03-23T15:03:12.000Z",
+  "date_on_sale_from": null,
+  "date_on_sale_from_gmt": null,
+  "date_on_sale_to": null,
+  "date_on_sale_to_gmt": null,
+  "default_attributes": Array [],
+  "description": "<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+",
+  "dimensions": Object {
+    "height": "",
+    "length": "",
+    "width": "",
+  },
+  "download_expiry": -1,
+  "download_limit": -1,
+  "downloadable": false,
+  "downloads": Array [],
+  "external_url": "",
+  "featured": false,
+  "id": 799,
+  "images": Array [
+    Object {
+      "alt": "",
+      "date_created": "2017-03-23T09:03:08.000Z",
+      "date_created_gmt": "2017-03-23T15:03:08.000Z",
+      "date_modified": "2017-03-23T09:03:08.000Z",
+      "date_modified_gmt": "2017-03-23T15:03:08.000Z",
+      "id": 795,
+      "name": "",
+      "src": "https://example.com/wp-content/uploads/2017/03/T_4_front-11.jpg",
+    },
+    Object {
+      "alt": "",
+      "date_created": "2017-03-23T09:03:09.000Z",
+      "date_created_gmt": "2017-03-23T15:03:09.000Z",
+      "date_modified": "2017-03-23T09:03:09.000Z",
+      "date_modified_gmt": "2017-03-23T15:03:09.000Z",
+      "id": 796,
+      "name": "",
+      "src": "https://example.com/wp-content/uploads/2017/03/T_4_back-10.jpg",
+    },
+    Object {
+      "alt": "",
+      "date_created": "2017-03-23T09:03:10.000Z",
+      "date_created_gmt": "2017-03-23T15:03:10.000Z",
+      "date_modified": "2017-03-23T09:03:10.000Z",
+      "date_modified_gmt": "2017-03-23T15:03:10.000Z",
+      "id": 797,
+      "name": "",
+      "src": "https://example.com/wp-content/uploads/2017/03/T_3_front-10.jpg",
+    },
+    Object {
+      "alt": "",
+      "date_created": "2017-03-23T09:03:11.000Z",
+      "date_created_gmt": "2017-03-23T15:03:11.000Z",
+      "date_modified": "2017-03-23T09:03:11.000Z",
+      "date_modified_gmt": "2017-03-23T15:03:11.000Z",
+      "id": 798,
+      "name": "",
+      "src": "https://example.com/wp-content/uploads/2017/03/T_3_back-10.jpg",
+    },
+  ],
+  "manage_stock": false,
+  "menu_order": 0,
+  "meta_data": Array [],
+  "name": "Ship Your Idea",
+  "parent_id": 0,
+  "purchase_note": "",
+  "regular_price": "120.10",
+  "reviews_allowed": true,
+  "sale_price": "",
+  "shipping_class": "",
+  "short_description": "<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+",
+  "sku": "",
+  "slug": "ship-your-idea-22",
+  "sold_individually": false,
+  "status": "publish",
+  "stock_quantity": null,
+  "stock_status": "instock",
+  "tags": Array [],
+  "tax_class": "",
+  "tax_status": "taxable",
+  "type": "variable",
+  "upsell_ids": Array [],
+  "virtual": false,
+  "weight": "",
+}
+`;
+
 exports[`transform should transform 1`] = `
-"import {types} from 'mobx-state-tree'
+"/* tslint:disable */
+import {types} from 'mobx-state-tree'
 
 export const Attributes = types.model('Attributes', {
     /**

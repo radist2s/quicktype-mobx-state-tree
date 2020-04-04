@@ -1,7 +1,8 @@
-import {join as pathJoin} from 'path'
+import {relative as pathRelative, resolve as pathResolve, dirname as pathDirname, extname as pathExtname} from 'path'
+import {statSync, lstatSync} from 'fs'
 import {quicktype as quicktypeLib, quicktypeMultiFile} from 'quicktype/dist/quicktype-core'
 import {CLIOptions, parseCLIOptions, makeQuicktypeOptions, writeOutput} from 'quicktype'
-import {MobXStateTreeTargetLanguage} from './MobXStateTreeLanguage'
+import {MobXStateTreeTargetLanguage, mstOptions} from './MobXStateTreeLanguage'
 import {Options} from 'quicktype/dist/quicktype-core/Run'
 
 export async function quicktype(options: Partial<Options>) {
@@ -12,6 +13,60 @@ export async function quicktype(options: Partial<Options>) {
     const {lines: schema} = await quicktypeLib(optionsMerged)
 
     return schema.join('\n')
+}
+
+export function resolveTypesModuleOption(options: Partial<Options>, outPath?: string) {
+    if (!options || !options.rendererOptions || !outPath || options.outputFilename === 'stdout') {
+        return options
+    }
+
+    const {rendererOptions} = options
+
+    const typesModule = mstOptions.typesModule.getValue(rendererOptions)
+
+    if (!typesModule) {
+        return options
+    }
+
+    const moduleAbsPath = pathResolve(typesModule)
+
+    const moduleFileExtname = pathExtname(moduleAbsPath)
+
+    const isFilePathModule = Array.prototype.some.call([moduleAbsPath], function (path) {
+        const moduleLstat = statSync(path)
+
+        return moduleLstat.isFile() || moduleLstat.isDirectory()
+    })
+
+    if (!isFilePathModule) {
+        return options
+    }
+
+    const outDir: string = (() => {
+        const outPathAbs = pathResolve(outPath)
+
+        try {
+            if (lstatSync(outPathAbs).isDirectory()) {
+                return outPathAbs
+            }
+        } catch (e) {}
+
+        return pathDirname(outPathAbs)
+    })()
+
+    const moduleImportPath: string = (() => {
+        const moduleOutputPath = pathRelative(outDir, moduleAbsPath)
+
+        return moduleFileExtname ? moduleOutputPath.slice(0, -moduleFileExtname.length) : moduleOutputPath
+    })()
+
+    return {
+        ...options,
+        rendererOptions: {
+            ...rendererOptions,
+            [mstOptions.typesModule.definition.name]: (moduleImportPath[0] === '.') ? moduleImportPath : `./${moduleImportPath}`
+        }
+    }
 }
 
 export async function main(args: string[] | Partial<CLIOptions>) {
@@ -40,7 +95,14 @@ export async function main(args: string[] | Partial<CLIOptions>) {
         }
     }
 
-    const quicktypeOptions = await makeQuicktypeOptions(cliOptions, [targetLanguage])
+    const quicktypeOptions = await (async function () {
+        const typedOptions = await makeQuicktypeOptions(cliOptions, [targetLanguage])
+        if (!typedOptions) {
+            return undefined
+        }
+
+        return resolveTypesModuleOption(typedOptions, cliOptions.out)
+    }())
 
     if (quicktypeOptions === undefined) {
         return
