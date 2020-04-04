@@ -1,6 +1,6 @@
 {
     "name": "quicktype-mobx-state-tree",
-    "description": "Quicktype MobX State Tree renderer",
+    "description": "Quicktype MobX State Tree language renderer",
     "version": "1.0.0-alpha.0",
     "author": "Alex Batalov @radist2s",
     "bin": {

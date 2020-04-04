@@ -27,7 +27,7 @@ type DateType = Date | null
 
 export function typeDate() {
     return mstTypes.custom<DateSnapshotType, DateType>({
-        name: 'TypeUniversalDate',
+        name: 'Date',
         fromSnapshot(snapshot: DateSnapshotType): Date | null {
             const timestampMs = normalizeTimestampMs(snapshot)
 

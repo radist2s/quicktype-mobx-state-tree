@@ -31,7 +31,7 @@ export const mstOptions = {
 
 export class MobXStateTreeTargetLanguage extends TypeScriptTargetLanguage {
     constructor(
-        readonly displayName: string = 'MobX-State-Tree',
+        readonly displayName: string = 'MobX State Tree',
         readonly names: string[] = ['mobx', 'mst', 'ts', 'tsx', 'js', 'jsx'],
         readonly extension: string = 'ts'
     ) {
