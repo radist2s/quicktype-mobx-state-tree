@@ -33,9 +33,14 @@ export function resolveTypesModuleOption(options: Partial<Options>, outPath?: st
     const moduleFileExtname = pathExtname(moduleAbsPath)
 
     const isFilePathModule = Array.prototype.some.call([moduleAbsPath], function (path) {
-        const moduleLstat = statSync(path)
+        try {
+            const moduleLstat = statSync(path)
 
-        return moduleLstat.isFile() || moduleLstat.isDirectory()
+            return moduleLstat.isFile() || moduleLstat.isDirectory()
+        }
+        catch (e) {
+            return false
+        }
     })
 
     if (!isFilePathModule) {
